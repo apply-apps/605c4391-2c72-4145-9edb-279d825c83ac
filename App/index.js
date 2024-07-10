@@ -1,53 +1,53 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// Filename: index.js
+// Combined code from all files
+
+import React, { useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, View, Button } from 'react-native';
 
 const App = () => {
-  const fullText = 'Hi, this is Apply.\nCreating mobile apps is now as simple as typing text.\nJust input your idea and press APPLY, and our platform does the rest...';
-  const [displayedText, setDisplayedText] = useState('');
-  const [index, setIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+    const [letterIndex, setLetterIndex] = useState(0);
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-  useEffect(() => {
-    if (isPaused) return;
+    const nextLetter = () => {
+        setLetterIndex((prevIndex) => (prevIndex + 1) % letters.length);
+    };
 
-    const interval = setInterval(() => {
-      setDisplayedText((prev) => prev + fullText[index]);
-      setIndex((prev) => {
-        if (prev === fullText.length - 1) {
-          setIsPaused(true);
-          setTimeout(() => {
-            setDisplayedText('');
-            setIndex(0);
-            setIsPaused(false);
-          }, 2000);
-          return 0;
-        }
-        return prev + 1;
-      });
-    }, 100);
+    const previousLetter = () => {
+        setLetterIndex((prevIndex) => (prevIndex - 1 + letters.length) % letters.length);
+    };
 
-    return () => clearInterval(interval);
-  }, [index, isPaused]);
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{displayedText}</Text>
-    </View>
-  );
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.letterContainer}>
+                <Text style={styles.letter}>{letters[letterIndex]}</Text>
+            </View>
+            <View style={styles.buttonContainer}>
+                <Button title="Previous" onPress={previousLetter} />
+                <Button title="Next" onPress={nextLetter} />
+            </View>
+        </SafeAreaView>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'black',
-    padding: 20,
-  },
-  text: {
-    color: 'white',
-    fontSize: 24,
-    fontFamily: 'monospace',
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 20, // avoid overlap with status bar
+    },
+    letterContainer: {
+        marginBottom: 20,
+    },
+    letter: {
+        fontSize: 120,
+        fontWeight: 'bold',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '80%',
+    },
 });
 
 export default App;
